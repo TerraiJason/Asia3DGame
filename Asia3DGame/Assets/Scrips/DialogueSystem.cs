@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using System.Collections;
 namespace TerraiJason
 {
     /// <summary>
@@ -30,9 +31,42 @@ public class DialogueSystem : MonoBehaviour
             textContent = GameObject.Find("對話內容").GetComponent<TextMeshProUGUI>();
             goTriangle = GameObject.Find("完成圖示");
             goTriangle.SetActive(false);
+
+            StartCoroutine(FadeGroup());
+            StartCoroutine(TypeEffect());
         } 
         #endregion
 
+        /// <summary>
+        /// 淡入淡出的群組物件
+        /// </summary>
+        private IEnumerator FadeGroup()
+        {
+            for (int i = 0; i <10; i++)
+            {
+                groupDialogue.alpha += 0.1f;
+                yield return new WaitForSeconds(0.04f);
+                   
+            }
+        }
+
+        private IEnumerator TypeEffect()
+        {
+            //處理說話者名稱
+            textName.text = dialogueOpening.dialogueName;
+            textContent.text = "";
+
+            //下方的dialogueContents[0]中的0表示第幾段對話
+            string dialogue = dialogueOpening.dialogueContents[0];
+
+            for (int i = 0; i < dialogue.Length; i++)
+            {
+                textContent.text += dialogue[i];
+                yield return dialogueInterval;
+            }
+
+            goTriangle.SetActive(true);
+        }
     }
 
 }
